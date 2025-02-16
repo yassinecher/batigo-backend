@@ -1,0 +1,61 @@
+<div class="container">
+    <h1>Commandes List</h1>
+
+    <button (click)="toggleForm()">{{ showForm ? 'Hide Form' : 'Add New Commande' }}</button>
+
+    <!-- Display List of Commandes in Cards -->
+    <div class="commande-list">
+        <div class="commande-card" *ngFor="let commande of commandes">
+            <h3>Commande ID: {{ commande.idcommande }}</h3>
+            <p><strong>Details:</strong> {{ commande.details }}</p>
+            <p><strong>Order Date:</strong> {{ commande.orderdate }}</p>
+            <p><strong>Status:</strong> {{ commande.status }}</p>
+            <div class="actions">
+                <button (click)="editCommande(commande)">Edit</button>
+                <button (click)="onDeleteCommande(commande.idcommande)">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form for Adding or Updating a Commande -->
+    <div class="form-container" *ngIf="showForm" style="margin-top: 20px;">
+        <h2>{{ selectedCommande ? 'Edit Commande' : 'Add New Commande' }}</h2>
+        <form #commandeForm="ngForm" (ngSubmit)="onSubmit()">
+
+            <!-- Details Field -->
+            <div>
+                <label for="details">Details:</label>
+                <input 
+                    type="text" 
+                    id="details" 
+                    name="details" 
+                    [(ngModel)]="formCommande.details" 
+                    required>
+            </div>
+
+            <!-- Order Date Field -->
+            <div>
+                <label for="orderdate">Order Date:</label>
+                <input 
+                    type="date" 
+                    id="orderdate" 
+                    name="orderdate" 
+                    [(ngModel)]="formCommande.orderdate" 
+                    required>
+            </div>
+
+            <!-- Status Field -->
+            <div>
+                <label for="status">Status:</label>
+                <select id="status" name="status" [(ngModel)]="formCommande.status" required>
+                    <option value="Pending">Pending</option>
+                    <option value="Processed">Processed</option>
+                    <option value="Shipped">Shipped</option>
+                </select>
+            </div>
+
+            <button type="submit">{{ selectedCommande ? 'Update' : 'Add' }} Commande</button>
+            <button type="button" (click)="cancelForm()">Cancel</button>
+        </form>
+    </div>
+</div>
