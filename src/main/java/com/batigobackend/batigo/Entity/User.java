@@ -16,7 +16,6 @@ import java.util.List;
 @Getter
 @Setter
 @SuperBuilder
-
 public class User implements UserDetails {
 
   @Id
