@@ -1,0 +1,31 @@
+<div class="container">
+    <h1>Gestion des Livraisons</h1>
+
+
+    <!-- Display List of Livraisons -->
+    <table border="1" width="100%" cellspacing="0" cellpadding="8" style="margin-top: 20px;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Status</th>
+                <th>Order Date</th>
+                <th>Commande ID</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let liv of livraisons">
+                <td>{{ liv.id }}</td>
+                <td>{{ liv.statusl }}</td>
+                <td>{{ liv.orderdate | date: 'short' }}</td>  <!-- Format the date to a readable form -->
+                <td>{{ liv.commande?.idcommande }}</td>
+                <td>
+                    <button (click)="editLivraison(liv)">Edit</button>
+                    <button (click)="deleteLivraison(liv.id)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+</div>
