@@ -27,9 +27,10 @@ public class LivraisonController {
         return livraisonService.retrievelivraison(livraisonId);
     }
 
-    @PostMapping("/addlivraison")
-    public Livraison addLivraison(@RequestBody Livraison livraison) {
-        return livraisonService.addlivraison(livraison);
+    @PostMapping("/addlivraison/{cid}")
+    public Livraison addLivraison(@RequestBody Livraison livraison,@PathVariable("cid") Long commandId) {
+
+        return livraisonService.addlivraison(livraison,commandId);
     }
 
     @PutMapping("/modifylivraison")

@@ -40,8 +40,8 @@ public class Commande {
         this.user = user;
     }
 
-    @OneToOne(mappedBy = "commande", cascade = CascadeType.ALL)
-
+    @OneToOne(mappedBy = "commande", cascade = CascadeType.REMOVE,orphanRemoval = true)
+    @JsonIgnore
     private Livraison livraison;
 
     public enum Status {

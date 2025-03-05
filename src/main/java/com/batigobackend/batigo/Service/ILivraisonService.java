@@ -10,7 +10,7 @@ public interface ILivraisonService {
 
     public List<Livraison> retrieveAlllivraisons();
     public Livraison retrievelivraison(Long livraisonId);
-    public Livraison addlivraison(Livraison f);
+    public Livraison addlivraison(Livraison f,Long commandId );
     public void removelivraison(Long livraisonId);
     public Livraison modifylivraison(Livraison livraison);
 }

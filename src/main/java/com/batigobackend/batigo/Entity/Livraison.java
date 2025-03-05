@@ -30,8 +30,8 @@ public class Livraison {
     public Date orderdate;
 
     @OneToOne
-    @JoinColumn(name = "commande_id", referencedColumnName = "idcommande")
-    @JsonIgnore
+    @JoinColumn(name = "commande_id", referencedColumnName = "idcommande",nullable = true)
+
     private Commande commande;
     public enum StatusL {
         Shipped,Delivered,Returned

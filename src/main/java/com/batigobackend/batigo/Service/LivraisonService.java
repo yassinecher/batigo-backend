@@ -4,6 +4,7 @@ import com.batigobackend.batigo.Entity.Commande;
 import com.batigobackend.batigo.Entity.Livraison;
 import com.batigobackend.batigo.Repository.CommandeRepository;
 import com.batigobackend.batigo.Repository.LivraisonRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,13 +30,9 @@ public class LivraisonService implements ILivraisonService {
     }
 
     @Override
-    public Livraison addlivraison(Livraison livraison) {
+    public Livraison addlivraison(Livraison livraison,Long commandId ) {
         // Check if the Commande exists
-        if (livraison.getCommande() == null || livraison.getCommande().getIdcommande() == null) {
-            throw new IllegalArgumentException("Commande must be provided");
-        }
-
-        Commande commande = commandeRepository.findById(livraison.getCommande().getIdcommande())
+        Commande commande = commandeRepository.findById(commandId)
                 .orElseThrow(() -> new IllegalArgumentException("Commande not found"));
 
         System.out.println("Commande found: " + commande);  // Debugging line
@@ -43,14 +40,34 @@ public class LivraisonService implements ILivraisonService {
         // Set the commande to livraison
         livraison.setCommande(commande);
 
+        System.out.println("livraison.getCommande().getIdcommande():"+livraison.getCommande().getIdcommande());
+        if (livraison.getCommande() == null || livraison.getCommande().getIdcommande() == null) {
+            throw new IllegalArgumentException("Commande must be provided");
+        }
+
+
         // Save the livraison and return
         return livraisonRepository.save(livraison);
     }
 
 
     @Override
+
     public void removelivraison(Long livraisonId) {
-        livraisonRepository.deleteById(livraisonId);
+        Livraison livraison = livraisonRepository.findById(livraisonId)
+                .orElseThrow(() -> new EntityNotFoundException("Livraison not found"));
+
+        // Unlink Livraison from Commande before deletion
+        if (livraison.getCommande() != null) {
+            // Remove the reference to Livraison in the Commande entity
+            livraison.getCommande().setLivraison(null);
+
+            // Save Commande after unlinking
+            commandeRepository.save(livraison.getCommande());
+        }
+
+        // Now, delete Livraison
+        livraisonRepository.delete(livraison); // Only deletes Livraison
     }
 
     @Override
