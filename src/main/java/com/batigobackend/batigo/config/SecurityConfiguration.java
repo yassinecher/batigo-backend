@@ -25,7 +25,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity
 public class SecurityConfiguration  {
 
-    private static final String[] WHITE_LIST_URL = {"/api/v1/auth","/api/v1/offres","/api/v1/offres/**",
+    private static final String[] WHITE_LIST_URL = {"/api/v1/auth","/api/v1/offres","/api/v1/offres/**", "/**",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
@@ -49,7 +49,7 @@ public class SecurityConfiguration  {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfig = new CorsConfiguration();
-                    corsConfig.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:4201", "https://admin.oscarrecrutement.tn","https://oscarrecrutement.tn"));
+                    corsConfig.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:59741", "https://admin.oscarrecrutement.tn","https://oscarrecrutement.tn"));
                     corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     corsConfig.setAllowedHeaders(List.of("Content-Type", "Authorization")); // Specify headers you expect
                     corsConfig.setAllowCredentials(true);
@@ -73,6 +73,7 @@ public class SecurityConfiguration  {
                         .requestMatchers(GET, "/api/v1/users").hasAnyAuthority(ADMIN_READ.name(), EMPLOYEUR_READ.name(),USER.name())
                        */ .anyRequest().authenticated()
                 )
+
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

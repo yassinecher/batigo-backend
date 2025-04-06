@@ -65,7 +65,7 @@ public class AuthenticationService {
             .phoneNumber(request.getPhoneNumber())
             .profilePicture("assets/images/avatar.png")
             .gender(request.getGender())
-            .role(Role.USER)  // Make sure Role is correctly set
+            .role(Role.ADMIN)  // Make sure Role is correctly set
             .build();
     System.out.println("user: " + client.getFirstname());
     var savedUser = repository.save(client);
