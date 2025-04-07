@@ -26,6 +26,11 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityConfiguration  {
 
     private static final String[] WHITE_LIST_URL = {"/api/v1/auth","/api/v1/offres","/api/v1/offres/**",
+            "/api/test",
+            "/api/categories/**",
+            "/api/stats/**",
+            "/api/produits/**",
+            "/api/fournisseur/**",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
@@ -36,7 +41,7 @@ public class SecurityConfiguration  {
             "/swagger-ui/**",
             "/webjars/**",
             "/swagger-ui.html",
-            "/api/offres","/api/v1/search/suggestions","/api/v1/auth/admin/authenticate","/api/v1/auth/register","/api/v1/auth/authenticate","/api/v1/auth/forgot-password","/api/v1/auth/reset"
+            "/api/offres","/api/v1/search/suggestions","/api/v1/auth/admin/authenticate","/api/v1/auth/register","/api/v1/auth/authenticate","/api/v1/auth/forgot-password","/api/v1/auth/reset",
 
     };
 
@@ -56,22 +61,22 @@ public class SecurityConfiguration  {
                     return corsConfig;
                 }))
                 .authorizeHttpRequests(req -> req
-                   .requestMatchers(WHITE_LIST_URL).permitAll()
-                        /*.requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), EMPLOYER.name())
-                        .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), EMPLOYEUR_READ.name())
-                        .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), EMPLOYEUR_CREATE.name())
-                        .requestMatchers(PUT, "/api/v1/management/**").hasAnyAuthority(ADMIN_UPDATE.name(), EMPLOYEUR_UPDATE.name())
-                        .requestMatchers(DELETE, "/api/v1/management/**").hasAnyAuthority(ADMIN_DELETE.name(), EMPLOYEUR_DELETE.name())
+                        /* .requestMatchers(WHITE_LIST_URL).permitAll()
+                      .requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), EMPLOYER.name())
+                          .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), EMPLOYEUR_READ.name())
+                          .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), EMPLOYEUR_CREATE.name())
+                          .requestMatchers(PUT, "/api/v1/management/**").hasAnyAuthority(ADMIN_UPDATE.name(), EMPLOYEUR_UPDATE.name())
+                          .requestMatchers(DELETE, "/api/v1/management/**").hasAnyAuthority(ADMIN_DELETE.name(), EMPLOYEUR_DELETE.name())
 
-                        .requestMatchers("/api/v1/auth/admin/**").hasAnyRole(ADMIN.name(), EMPLOYER.name())
-                        .requestMatchers(GET, "/api/v1/auth/admin/**").hasAnyAuthority(ADMIN_READ.name(), EMPLOYEUR_READ.name())
-                        .requestMatchers(POST, "/api/v1/auth/admin/**").hasAnyAuthority(ADMIN_CREATE.name(), EMPLOYEUR_CREATE.name())
-                        .requestMatchers(PUT, "/api/v1/auth/admin/**").hasAnyAuthority(ADMIN_UPDATE.name(), EMPLOYEUR_UPDATE.name())
-                        .requestMatchers(DELETE, "/api/v1/auth/admin/**").hasAnyAuthority(ADMIN_DELETE.name(), EMPLOYEUR_DELETE.name())
+                          .requestMatchers("/api/v1/auth/admin/**").hasAnyRole(ADMIN.name(), EMPLOYER.name())
+                          .requestMatchers(GET, "/api/v1/auth/admin/**").hasAnyAuthority(ADMIN_READ.name(), EMPLOYEUR_READ.name())
+                          .requestMatchers(POST, "/api/v1/auth/admin/**").hasAnyAuthority(ADMIN_CREATE.name(), EMPLOYEUR_CREATE.name())
+                          .requestMatchers(PUT, "/api/v1/auth/admin/**").hasAnyAuthority(ADMIN_UPDATE.name(), EMPLOYEUR_UPDATE.name())
+                          .requestMatchers(DELETE, "/api/v1/auth/admin/**").hasAnyAuthority(ADMIN_DELETE.name(), EMPLOYEUR_DELETE.name())
 
-                        .requestMatchers("/api/v1/users").hasAnyRole(ADMIN.name(), EMPLOYER.name(), USER.name())
-                        .requestMatchers(GET, "/api/v1/users").hasAnyAuthority(ADMIN_READ.name(), EMPLOYEUR_READ.name(),USER.name())
-                       */ .anyRequest().authenticated()
+                          .requestMatchers("/api/v1/users").hasAnyRole(ADMIN.name(), EMPLOYER.name(), USER.name())
+                          .requestMatchers(GET, "/api/v1/users").hasAnyAuthority(ADMIN_READ.name(), EMPLOYEUR_READ.name(),USER.name())
+                         */ .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
