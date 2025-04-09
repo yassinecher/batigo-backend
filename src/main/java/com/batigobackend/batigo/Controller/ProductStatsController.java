@@ -32,19 +32,6 @@ public class ProductStatsController {
         return produitService.getTotalQuantityOfAllProducts();
     }
 
-    // Endpoint to get average product price
-    @GetMapping("/produits/average-price")
-    public Double getAverageProductPrice() {
-        return produitService.getAverageProductPrice();
-    }
-
-    // Endpoint to get total sales value (price * quantity)
-    @GetMapping("/produits/total-sales")
-    public Double getTotalSalesValue() {
-        return produitService.getTotalSalesValue();
-    }
-
-    // Endpoint to get total number of categories
     @GetMapping("/stats/categories/total")
     public Long getTotalNumberOfCategories() {
         return categorieProduitService.getTotalNumberOfCategories();
@@ -56,11 +43,6 @@ public class ProductStatsController {
         return categorieProduitService.getTotalNumberOfProductsPerCategory(categoryId);
     }
 
-    // Endpoint to get categories with no products
-    @GetMapping("/categories/no-products")
-    public Long getCategoriesWithNoProducts() {
-        return categorieProduitService.getCategoriesWithNoProducts();
-    }
 
     // Endpoint to get the most popular category (based on number of products)
     @GetMapping("/categories/most-popular")

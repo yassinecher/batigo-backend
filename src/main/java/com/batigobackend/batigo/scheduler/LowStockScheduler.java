@@ -28,9 +28,9 @@ public class LowStockScheduler {
       StringBuilder message = new StringBuilder("Low stock alert: ");
         for (Produit produit : lowStockProducts) {
             message.append(" ")
-                    .append(produit.getNomP())  // Assuming getNomP() returns the product name
+                    .append(produit.getNomP())
                     .append(" has only ")
-                    .append(produit.getQuantity())  // Assuming getQuantity() returns the product quantity
+                    .append(produit.getQuantity())
                     .append(" left in stock!");
         }
         System.out.println(message);
