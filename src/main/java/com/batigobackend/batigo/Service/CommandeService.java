@@ -62,7 +62,7 @@ public class CommandeService implements ICommandeService {
                 + "Utilisateur: " + user.getEmail() + "\n"
                 + "Merci de vérifier le système.";
 
-        emailService.sendEmail(to, subject, body);
+        //emailService.sendEmail(to, subject, body);
 
         return savedCommande;
     }

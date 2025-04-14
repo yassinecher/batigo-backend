@@ -3,6 +3,6 @@ package com.batigobackend.batigo.Model;
 import lombok.Data;
 
 @Data
-public class ForgotPasswordModel {
+public class Email {
     private String email;
 }

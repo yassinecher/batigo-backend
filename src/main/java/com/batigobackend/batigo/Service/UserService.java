@@ -21,7 +21,7 @@ public class UserService {
 
 
     private final PasswordEncoder passwordEncoder;
-    private final UserRepository repository;
+    private final UserRepository userRepository;
     public void changePassword(ChangePasswordRequest request, Principal connectedUser) {
 
         var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
@@ -39,7 +39,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
 
         // save the new password
-        repository.save(user);
+        userRepository.save(user);
     }
     public void changePasswordForgotten(String password, User connectedUser) {
 
@@ -54,7 +54,7 @@ public class UserService {
         connectedUser.setPassword(passwordEncoder.encode(password));
 
         // save the new password
-        repository.save(connectedUser);
+        userRepository.save(connectedUser);
     }
 
     private final JwtService jwtService;
@@ -69,7 +69,7 @@ public class UserService {
         refreshToken = authHeader.substring(7);
         userEmail = jwtService.extractUsername(refreshToken);
         if (userEmail != null) {
-            var user = this.repository.findByEmail(userEmail)
+            var user = this.userRepository.findByEmail(userEmail)
                     .orElseThrow();
             if (jwtService.isTokenValid(refreshToken, user)) {
                 return user;
@@ -91,11 +91,11 @@ public class UserService {
         userEmail = jwtService.extractUsername(refreshToken);
 
         if (userEmail != null) {
-            var user = repository.findByEmail(userEmail)
+            var user = userRepository.findByEmail(userEmail)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
             if (jwtService.isTokenValid(refreshToken, user)) {
-                return repository.findAll(); // Return the list of all users
+                return userRepository.findAll(); // Return the list of all users
             }
         }
 
@@ -103,6 +103,25 @@ public class UserService {
     }
 
     public Boolean findUserByEmail(String email) {
-       return repository.findByEmail(email).isPresent();
+       return userRepository.findByEmail(email).isPresent();
     }
+
+    public User updateUser(Integer id, User updatedUserRequest) {
+        // Fetch user from the database
+        User existingUser = userRepository.findById(id).orElse(null);
+        // Update fields as necessary
+        existingUser.setEmail(updatedUserRequest.getEmail());
+        existingUser.setFirstname(updatedUserRequest.getFirstname());
+        existingUser.setLastname(updatedUserRequest.getLastname());
+        existingUser.setGender(updatedUserRequest.getGender());
+        existingUser.setPhoneNumber(updatedUserRequest.getPhoneNumber());
+        // Update password if provided (you might want additional validation here)
+        if (updatedUserRequest.getPassword() != null && !updatedUserRequest.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(updatedUserRequest.getPassword())); // Assuming you're using a password encoder
+        }
+
+        // Save the updated user back to the database
+        return userRepository.save(existingUser);
+    }
+
 }

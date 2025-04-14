@@ -50,7 +50,7 @@ public class CartService implements ICartService {
         for (Map.Entry<String, List<Cart>> entry : groupedByProject.entrySet()) {
             String projectName = entry.getKey();
             List<String> itemNames = entry.getValue().stream()
-                    .map(cart -> cart.getProject().getProjectName())  // Assuming Cart has a method getProductName()
+                    .map(Cart::getName)  // Assuming Cart has a method getProductName()
                     .collect(Collectors.toList());
             String combinedNames = String.join(", ", itemNames);
             result.add(new CartDTO(projectName, combinedNames));  // Use CartDTO for structured response

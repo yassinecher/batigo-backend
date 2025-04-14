@@ -16,6 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,8 +26,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +39,8 @@ public class AuthenticationService {
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
+  private final Map<String, String> verificationCodes = new ConcurrentHashMap<>();
+
   public User getUser(HttpServletRequest request) {
     var client = User.builder().build();
     final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -196,10 +201,21 @@ public class AuthenticationService {
     resetToken.setExpiryDate(expiryDate);
     passwordResetTokenRepository.save(resetToken);
 
-    String resetLink = "http://Batigo.tn/reset-password?resetToken=" + token;
+    String resetLink = "http://localhost:4200/reset-password?resetToken=" + token;
     sendResetPasswordEmail(email,email, resetLink);
   }
 
+
+  public void sendVerificationCode(String email) {
+    String code = generateCode();
+    verificationCodes.put(email, code);
+
+    SimpleMailMessage message = new SimpleMailMessage();
+    message.setTo(email);
+    message.setSubject("Code de vérification");
+    message.setText("Votre code de vérification est : " + code);
+    mailSender.send(message);
+  }
   private void sendResetPasswordEmail(String toEmail, String name, String resetLink) {
     try {
       MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -328,5 +344,11 @@ public class AuthenticationService {
 
 
   }
+  public boolean verifyCode(String email, String code) {
+    return code.equals(verificationCodes.get(email));
+  }
 
+  private String generateCode() {
+    return String.valueOf((int)(Math.random() * 900000) + 100000); // 6 chiffres
+  }
 }
