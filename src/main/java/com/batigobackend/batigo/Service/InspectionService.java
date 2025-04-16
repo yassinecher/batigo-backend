@@ -54,20 +54,19 @@ public class InspectionService implements Iserviceinsp{
 
     @Override
     public Inspections edit(int id, Inspections updatedInspection) {
-        // Vérifie si l'inspection avec l'ID donné existe
         Inspections existingInspection = this.inspectionsRepository.findById(id).orElse(null);
 
         if (existingInspection != null) {
-            // Met à jour les propriétés de l'inspection existante avec les nouvelles valeurs
             existingInspection.setResponsable(updatedInspection.getResponsable());
             existingInspection.setObjet(updatedInspection.getObjet());
             existingInspection.setDateInspection(updatedInspection.getDateInspection());
             existingInspection.setResultat(updatedInspection.getResultat());
 
-            // Sauvegarde l'inspection mise à jour dans la base de données
+            // ✅ Conserve le lien avec l’incident pour éviter perte ou suppression
+            existingInspection.setIncidents(updatedInspection.getIncidents());
+
             return this.inspectionsRepository.save(existingInspection);
         } else {
-            // Retourne null ou lance une exception si l'inspection n'existe pas
             return null;
         }
     }

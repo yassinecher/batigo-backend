@@ -13,66 +13,44 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.List;
 
-import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableMethodSecurity
-public class SecurityConfiguration  {
+public class SecurityConfiguration {
 
-    private static final String[] WHITE_LIST_URL = {"/api/v1/auth","/api/v1/offres","/api/v1/offres/**",    "/inspections/**", "/incidents/**",
+    private static final String[] WHITE_LIST_URL = {
+            "/api/v1/auth/**",
+            "/api/enums/**", // ✅ Pour enum resultat
+            "/inspections/**",
+            "/incidents/**",
 
-            "/v2/api-docs",
-            "/v3/api-docs",
+            // Swagger
             "/v3/api-docs/**",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
             "/swagger-ui/**",
-            "/webjars/**",
             "/swagger-ui.html",
-            "/api/offres","/api/v1/search/suggestions","/api/v1/auth/admin/authenticate","/api/v1/auth/register","/api/v1/auth/authenticate","/api/v1/auth/forgot-password","/api/v1/auth/reset"
-
+            "/webjars/**"
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(request -> {
-                    var corsConfig = new CorsConfiguration();
-                    corsConfig.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:4201", "https://admin.oscarrecrutement.tn","https://oscarrecrutement.tn"));
-                    corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                    corsConfig.setAllowedHeaders(List.of("Content-Type", "Authorization")); // Specify headers you expect
-                    corsConfig.setAllowCredentials(true);
-                    return corsConfig;
-                }))
-                .authorizeHttpRequests(req -> req
-                   .requestMatchers(WHITE_LIST_URL).permitAll()
-                        /*.requestMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), EMPLOYER.name())
-                        .requestMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), EMPLOYEUR_READ.name())
-                        .requestMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), EMPLOYEUR_CREATE.name())
-                        .requestMatchers(PUT, "/api/v1/management/**").hasAnyAuthority(ADMIN_UPDATE.name(), EMPLOYEUR_UPDATE.name())
-                        .requestMatchers(DELETE, "/api/v1/management/**").hasAnyAuthority(ADMIN_DELETE.name(), EMPLOYEUR_DELETE.name())
-
-                        .requestMatchers("/api/v1/auth/admin/**").hasAnyRole(ADMIN.name(), EMPLOYER.name())
-                        .requestMatchers(GET, "/api/v1/auth/admin/**").hasAnyAuthority(ADMIN_READ.name(), EMPLOYEUR_READ.name())
-                        .requestMatchers(POST, "/api/v1/auth/admin/**").hasAnyAuthority(ADMIN_CREATE.name(), EMPLOYEUR_CREATE.name())
-                        .requestMatchers(PUT, "/api/v1/auth/admin/**").hasAnyAuthority(ADMIN_UPDATE.name(), EMPLOYEUR_UPDATE.name())
-                        .requestMatchers(DELETE, "/api/v1/auth/admin/**").hasAnyAuthority(ADMIN_DELETE.name(), EMPLOYEUR_DELETE.name())
-
-                        .requestMatchers("/api/v1/users").hasAnyRole(ADMIN.name(), EMPLOYER.name(), USER.name())
-                        .requestMatchers(GET, "/api/v1/users").hasAnyAuthority(ADMIN_READ.name(), EMPLOYEUR_READ.name(),USER.name())
-                       */ .anyRequest().authenticated()
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(WHITE_LIST_URL).permitAll()
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
@@ -80,10 +58,27 @@ public class SecurityConfiguration  {
                 .logout(logout -> logout
                         .logoutUrl("/api/v1/auth/logout")
                         .addLogoutHandler(logoutHandler)
-                        .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
+                        .logoutSuccessHandler((request, response, authentication) ->
+                                SecurityContextHolder.clearContext())
                 );
 
         return http.build();
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        var corsConfig = new CorsConfiguration();
+        corsConfig.setAllowedOrigins(List.of(
+                "http://localhost:4200",
+                "http://localhost:4201"
+        ));
+        corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        corsConfig.setAllowedHeaders(List.of("Content-Type", "Authorization"));
+        corsConfig.setExposedHeaders(List.of("Authorization"));
+        corsConfig.setAllowCredentials(true);
+
+        var source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfig);
+        return source;
+    }
 }

@@ -1,3 +1,4 @@
+// InspectionsController.java
 package com.batigobackend.batigo.Controller;
 
 import com.batigobackend.batigo.Entity.Inspections;
@@ -20,14 +21,12 @@ public class InspectionsController {
         this.inspectionService = inspectionService;
     }
 
-    // 🔹 Récupérer toutes les inspections
     @GetMapping
     public ResponseEntity<List<Inspections>> getAllInspections() {
         List<Inspections> inspections = inspectionService.findAll();
         return ResponseEntity.ok(inspections);
     }
 
-    // 🔹 Récupérer une inspection par son ID
     @GetMapping("/{id}")
     public ResponseEntity<Inspections> getInspectionById(@PathVariable int id) {
         Inspections inspection = inspectionService.findById(id);
@@ -39,16 +38,23 @@ public class InspectionsController {
         return inspectionService.findAllByIncidentId(id);
     }
 
-    // 🔹 Ajouter une nouvelle inspection
     @PostMapping("/create/{id}")
-        public ResponseEntity<Inspections> createInspection(@PathVariable int id, @RequestBody Inspections inspection) {
+    public ResponseEntity<Inspections> createInspection(@PathVariable int id, @RequestBody Inspections inspection) {
         Inspections createdInspection = inspectionService.add(inspection, id);
         return ResponseEntity.ok(createdInspection);
     }
 
-    // 🔹 Modifier une inspection par son ID
     @PutMapping("/{id}")
     public ResponseEntity<Inspections> updateInspection(@PathVariable int id, @RequestBody Inspections inspection) {
+        System.out.println("===== [PUT /inspections/" + id + "] =====");
+        System.out.println("🔹 Données reçues :");
+        System.out.println("ID (body) : " + inspection.getId());
+        System.out.println("Responsable : " + inspection.getResponsable());
+        System.out.println("Objet : " + inspection.getObjet());
+        System.out.println("Date : " + inspection.getDateInspection());
+        System.out.println("Résultat : " + inspection.getResultat());
+        System.out.println("Incident ID : " + (inspection.getIncidents() != null ? inspection.getIncidents().getId() : "null"));
+
         try {
             Inspections updatedInspection = inspectionService.edit(id, inspection);
             return (updatedInspection != null) ? ResponseEntity.ok(updatedInspection) : ResponseEntity.notFound().build();
@@ -57,7 +63,6 @@ public class InspectionsController {
         }
     }
 
-    // 🔹 Supprimer une inspection par son ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteInspection(@PathVariable int id) {
         inspectionService.delete(id);

@@ -28,8 +28,9 @@ public class Inspections {
     @Column(nullable = false)
     private LocalDate dateInspection;  // Date de l'inspection
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String resultat;
+    private ResultatInspection resultat;
 
     @ManyToOne
     @JsonIgnore
