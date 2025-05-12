@@ -1,0 +1,22 @@
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+import joblib
+
+# Charger tes données (remplace ceci par le chemin réel de ton fichier CSV)
+df = pd.read_csv("chemin/vers/ton_fichier.csv")
+
+# Vérifie que les données ne sont pas vides
+print(df.head())
+
+# Créer le scaler et l'ajuster
+scaler = StandardScaler()
+X = df[['type_projet', 'budget_estime', 'duree_estimee', 'incident_qualite',
+        'incident_securite', 'materiaux_defectueux', 'conditions_meteo']]
+
+# Ajuste le scaler sur les données
+scaler.fit(X)
+
+# Sauvegarder le scaler dans un fichier
+joblib.dump(scaler, 'scaler.joblib')
+
+print("Scaler sauvegardé avec succès!")

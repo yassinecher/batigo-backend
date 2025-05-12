@@ -1,8 +1,11 @@
 package com.batigobackend.batigo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Month;
 import java.util.Date;
 
 @Entity
@@ -10,7 +13,6 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class Income {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,15 +20,17 @@ public class Income {
 
     private Float amount ;
     private Date date;
-    @Enumerated(EnumType.STRING)
-    private AccountType accountType;
-    private String source;
-    @ManyToOne
-    @JoinColumn(name = "account_id") // Clé étrangère
-    private Account  account;
 
-    public Account getAccount() {
-        return account;
+    private String source;
+    private Month month;
+
+
+    @ManyToOne
+    @JoinColumn(name = "projet_id") // Clé étrangère
+    private Projet projet;
+
+    public Projet getProjet() {
+        return projet;
     }
 
     public int getId() {
@@ -41,8 +45,8 @@ public class Income {
         return amount;
     }
 
-    public void setAmount(Float amount) {
-        this.amount = amount;
+    public Month getMonth() {
+        return month;
     }
 
     public Date getDate() {
@@ -53,12 +57,8 @@ public class Income {
         this.date = date;
     }
 
-    public AccountType getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(AccountType account) {
-        this.accountType = account;
+    public void setMonth(Month month) {
+        this.month = month;
     }
 
     public String getSource() {
@@ -69,6 +69,9 @@ public class Income {
         this.source = source;
     }
 
+    public void setProjet(Projet projet) {
+        this.projet = projet;
+    }
 
 
 }

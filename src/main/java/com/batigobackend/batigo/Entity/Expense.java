@@ -1,8 +1,11 @@
 package com.batigobackend.batigo.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Month;
 import java.util.Date;
 
 
@@ -22,15 +25,15 @@ public class Expense {
     private Float amount ;
 
     private Date date;
-    @Enumerated(EnumType.STRING)
-    private AccountType accountType;
+    private Month month;
+
     private String source;
     @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account  account;
+    @JoinColumn(name = "projet_id")
+    private Projet projet;
 
-    public Account getAccount() {
-        return account;
+    public Projet getProjet() {
+        return projet;
     }
 
     public int getId() {
@@ -45,6 +48,10 @@ public class Expense {
         return amount;
     }
 
+    public Month getMonth() {
+        return month;
+    }
+
     public void setAmount(Float amount) {
         this.amount = amount;
     }
@@ -57,12 +64,8 @@ public class Expense {
         this.date = date;
     }
 
-    public AccountType getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(AccountType account) {
-        this.accountType = account;
+    public void setMonth(Month month) {
+        this.month = month;
     }
 
     public String getSource() {
@@ -71,6 +74,10 @@ public class Expense {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public void setProjet(Projet projet) {
+        this.projet = projet;
     }
 
 }
