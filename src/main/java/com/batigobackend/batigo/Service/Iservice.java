@@ -3,6 +3,7 @@ package com.batigobackend.batigo.Service;
 
 
 import com.batigobackend.batigo.Entity.Income;
+import com.batigobackend.batigo.Model.IncomeRequest;
 
 import java.util.List;
 
@@ -12,7 +13,9 @@ public interface Iservice {
 
     Income findById(int id);
 
-    Income add(Income income);
+
+
+    Income add(IncomeRequest i);
 
     void delete(int id);
 

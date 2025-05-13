@@ -3,6 +3,7 @@ package com.batigobackend.batigo.Service;
 
 
 import com.batigobackend.batigo.Entity.Expense;
+import com.batigobackend.batigo.Model.ExpenseRequest;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface Eservice {
 
     Expense findById(int id);
 
-    Expense add(Expense expense);
+    Expense add(ExpenseRequest expense);
 
     void delete(int id);
 

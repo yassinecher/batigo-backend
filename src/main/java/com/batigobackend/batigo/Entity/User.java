@@ -1,4 +1,5 @@
 package com.batigobackend.batigo.Entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -34,7 +35,14 @@ public class User implements UserDetails {
   @Enumerated(EnumType.STRING)
   private Role role;
 
+  @OneToOne
+  private Incidents incident;
+
+  @OneToOne
+  private Inspections inspection;
+
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonIgnore
   private List<Token> tokens;
 
   @Override

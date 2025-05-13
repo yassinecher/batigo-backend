@@ -69,4 +69,29 @@ public class UserController {
         service.changePassword(request, connectedUser);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponse> updateUser(
+            @PathVariable Integer id,
+            @RequestBody User updatedUserRequest
+    ) {
+        User updatedUser = userService.updateUser(id, updatedUserRequest);
+
+        // Build the response
+        UserResponse userResponse = UserResponse.builder()
+                .id(updatedUser.getId())
+                .email(updatedUser.getEmail())
+                .lastname(updatedUser.getLastname())
+                .firstname(updatedUser.getFirstname())
+                .gender(updatedUser.getGender())
+                .phoneNumber(updatedUser.getPhoneNumber())
+                .profilePicture(updatedUser.getProfilePicture())
+                .role(updatedUser.getRole())
+                .status(updatedUser.getStatus())
+                .build();
+
+        // Return the updated user
+        return ResponseEntity.ok(userResponse);
+    }
+
 }

@@ -1,25 +1,36 @@
 package com.batigobackend.batigo.Controller;
 
-
-import java.util.List;
-
-
 import com.batigobackend.batigo.Entity.Expense;
-import com.batigobackend.batigo.Entity.Income;
+import com.batigobackend.batigo.Model.ExpenseRequest;
+import com.batigobackend.batigo.Repository.ExpenseRepository;
 import com.batigobackend.batigo.Service.ExpenseService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import lombok.AllArgsConstructor;
+import java.util.List;
+import java.util.Optional;
 
+@Tag(name = "Expense")
 @RestController
- @RequestMapping("/expense")
+@RequestMapping("/expense")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ExpenseController {
 
     private final ExpenseService expenseService;
+    private final ExpenseRepository expenseRepository;
 
-    public ExpenseController(ExpenseService expenseService) {
+    public ExpenseController(ExpenseService expenseService, ExpenseRepository expenseRepository) {
         this.expenseService = expenseService;
+        this.expenseRepository = expenseRepository;
     }
+
+    @PostMapping("/add")
+    public Expense add(@RequestBody ExpenseRequest e) {
+
+        return expenseService.add(e);
+    }
+
 
 
     @GetMapping
@@ -28,17 +39,20 @@ public class ExpenseController {
     }
 
 
-    @PostMapping("/add")
-    public Expense add(@RequestBody Expense expense) {
-      //  System.out.println(expense.getAmount());
 
-        return expenseService.add(expense);
+    @CrossOrigin(origins = "http://localhost:4200")
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<Expense> edit(@PathVariable int id, @RequestBody Expense expense) {
+        Optional<Expense> existingExpense = expenseRepository .findById(id);
+
+        if (existingExpense.isPresent()) {
+            Expense updated = expenseService.edit(expense);
+            return ResponseEntity.ok(updated);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
-    @PutMapping("/edit")
-    public Expense edit(@RequestBody Expense expense) {
-        Expense expense1 = expenseService.edit(expense);
-        return expense1;
-    }
+
 
     @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable int id) {
@@ -51,6 +65,15 @@ public class ExpenseController {
     public Expense show(@PathVariable int id) {
         return expenseService.findById(id);
     }
+
+
+
+
+
+
+
+
+
 
 
 
