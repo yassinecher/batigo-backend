@@ -89,7 +89,7 @@ Below are key API endpoints (base URL: `http://localhost:8080/api`):
 batigo-backend/
 ├── src/
 │   ├── main/
-│   │   ├── java/com/example/batigo/
+│   │   ├── java/com/batigobackend/batigo/
 │   │   │   ├── controller/    # REST controllers
 │   │   │   ├── service/       # Business logic
 │   │   │   ├── repository/    # JPA repositories
@@ -105,7 +105,7 @@ batigo-backend/
 1. Ensure MySQL is running.
 2. Create the database:
    ```sql
-   CREATE DATABASE batigo_db;
+   CREATE DATABASE batigo;
    ```
 3. The application uses JPA to auto-generate tables based on entity classes.
 
