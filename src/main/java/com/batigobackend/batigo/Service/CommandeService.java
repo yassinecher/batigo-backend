@@ -149,6 +149,7 @@ public class CommandeService implements ICommandeService {
             table.addCell(commande.getUser().getEmail());
         }
 
+
         document.add(table);
         document.close();
 

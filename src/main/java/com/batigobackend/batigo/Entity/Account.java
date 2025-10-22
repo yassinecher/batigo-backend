@@ -22,11 +22,6 @@ public class Account {
     private AccountType type;
 
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    private List<Income> incomes;
-
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-    private List<Expense> expenses;
 
     public int getId() {
         return id;
@@ -60,20 +55,5 @@ public class Account {
         this.type = type;
     }
 
-    public List<Income> getIncomes() {
-        return incomes;
-    }
-
-    public void setIncomes(List<Income> incomes) {
-        this.incomes = incomes;
-    }
-
-    public List<Expense> getExpenses() {
-        return expenses;
-    }
-
-    public void setExpenses(List<Expense> expenses) {
-        this.expenses = expenses;
-    }
 }
 
